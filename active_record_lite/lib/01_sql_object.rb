@@ -38,11 +38,19 @@ class SQLObject
   end
 
   def self.all
-    # ...
+    results = DBConnection.execute(<<-SQL)
+      SELECT
+        #{table_name}.*
+      FROM
+        #{table_name}
+    SQL
+    parse_all(results)
   end
 
   def self.parse_all(results)
-    # ...
+    results.map do |row|
+      self.new(row)
+    end
   end
 
   def self.find(id)
@@ -51,6 +59,7 @@ class SQLObject
 
   def initialize(params = {})
     params.each do |key, value|
+      key = key.to_sym unless key.is_a? Symbol
       if self.class.columns.include?(key)
         self.send("#{key}=", value)
       else

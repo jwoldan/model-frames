@@ -42,8 +42,8 @@ module Associatable
   def belongs_to(name, options = {})
     self.assoc_options[name] = BelongsToOptions.new(name, options)
     define_method(name) do
-      foreign_key = self.send(self.assoc_options[name].foreign_key)
-      self.assoc_options[name].model_class.where(id: foreign_key).first
+      foreign_key = self.send(self.class.assoc_options[name].foreign_key)
+      self.class.assoc_options[name].model_class.where(id: foreign_key).first
     end
   end
 

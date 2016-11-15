@@ -44,7 +44,7 @@ describe ShowExceptions do
 
       it "the body of the response includes the error type" do
         response = mock_exception.call(env)
-        expect(response[2]).to include "RuntimeError"
+        expect(response[2][0]).to include "RuntimeError"
       end
     end
   end

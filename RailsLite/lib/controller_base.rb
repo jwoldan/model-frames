@@ -2,6 +2,7 @@ require 'active_support'
 require 'active_support/core_ext'
 require 'erb'
 require_relative './session'
+require_relative './flash'
 
 require 'byebug'
 
@@ -14,6 +15,7 @@ class ControllerBase
     @res = res
     @params = req.params.merge(params)
     @session = Session.new(req)
+    @flash = Flash.new(req)
   end
 
   # Helper method to alias @already_built_response
@@ -50,6 +52,10 @@ class ControllerBase
     @session
   end
 
+  def flash
+    @flash
+  end
+
   # use this with the router to call action_name (:index, :show, :create...)
   def invoke_action(name)
     send(name)
@@ -61,6 +67,7 @@ class ControllerBase
   def try_prep_response!
     raise "Error: already built response!" if already_built_response?
     session.store_session(res)
+    flash.store_flash(res)
     @already_built_response = true
   end
 

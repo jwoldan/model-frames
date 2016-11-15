@@ -1,0 +1,15 @@
+<h1> <%= @error.message %> </h1>
+
+<h2>Code Snippet</h2>
+<p>
+  <% @source_lines.each do |line| %>
+    <%= line %><br>
+  <% end %>
+</p>
+
+<h2>Stack Trace</h2>
+<p>
+  <% @error.backtrace.each do |line| %>
+    <%= line %><br>
+  <% end %>
+</p>

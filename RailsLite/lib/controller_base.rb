@@ -23,7 +23,7 @@ class ControllerBase
 
   # Set the response status code and header
   def redirect_to(url)
-    prep_response
+    try_prep_response!
     res.location = url
     res.status = 302
   end
@@ -32,7 +32,7 @@ class ControllerBase
   # Set the response's content type to the given type.
   # Raise an error if the developer tries to double render.
   def render_content(content, content_type)
-    prep_response
+    try_prep_response!
     res.write(content)
     res.set_header("Content-Type", content_type)
   end
@@ -53,14 +53,14 @@ class ControllerBase
   # use this with the router to call action_name (:index, :show, :create...)
   def invoke_action(name)
     send(name)
-    render(name) unless @already_built_response
+    render(name) unless already_built_response?
   end
 
   private
 
-  def prep_response
-    session.store_session(res)
+  def try_prep_response!
     raise "Error: already built response!" if already_built_response?
+    session.store_session(res)
     @already_built_response = true
   end
 

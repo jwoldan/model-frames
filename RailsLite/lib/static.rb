@@ -1,5 +1,3 @@
-require 'byebug'
-
 class Static
 
   attr_reader :app

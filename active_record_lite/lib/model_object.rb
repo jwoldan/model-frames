@@ -2,9 +2,11 @@ require 'active_support/inflector'
 
 require_relative 'db_connection'
 require_relative 'searchable'
+require_relative 'associatable'
 
 class ModelObject
   extend Searchable
+  extend Associatable
 
   def self.columns
     if @columns.nil?

@@ -17,7 +17,7 @@ Custom classes that extend `ModelObject` inherit a number of ORM features:
 
 In the example application, gerbil.rb is located in the `app/models` folder:
 
-```
+```ruby
 require_relative '../../lib/model/model_object'
 
 class Gerbil < ModelObject
@@ -39,7 +39,7 @@ Custom classes that extend `FramesController` can use the following methods:
 - `flash` and `flash.now`: key/values pairs saved to this hash will persist through the next session and the current session only, respectively.
 - By adding `protect_from_forgery` to your custom controller, Frames will check for an authenticity token in any submitted data.  This token can be added to the forms in your views as follows:
 
-```
+```html
 <input
   type="hidden"
   name="authenticity_token"
@@ -50,7 +50,7 @@ Custom classes that extend `FramesController` can use the following methods:
 
 In the example application, gerbils_controller.rb is located in the `app/controllers` folder:
 
-```
+```ruby
 require_relative '../../lib/frames/frames_controller'
 require_relative '../models/gerbil'
 
@@ -82,7 +82,7 @@ end
 
 The `Router` allows the mapping of routes to your custom controllers.  For example:
 
-```
+```ruby
 require_relative '../lib/frames/router'
 
 router = Router.new

@@ -1,6 +1,6 @@
 require 'erb'
 
-class ExceptionsServer
+class Exceptions
 
   attr_reader :app
 
@@ -9,7 +9,7 @@ class ExceptionsServer
   end
 
   def call(env)
-    app.call(env)    
+    app.call(env)
   rescue => e
     render_exception(e)
   end

@@ -1,4 +1,6 @@
-class StaticAssetsServer
+require 'erb'
+
+class StaticAssets
 
   attr_reader :app
 

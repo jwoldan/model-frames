@@ -9,6 +9,12 @@ require 'byebug'
 class ControllerBase
   attr_reader :req, :res, :params
 
+  @@protect_from_forgery = false
+
+  def self.protect_from_forgery
+    @@protect_from_forgery = true
+  end
+
   # Setup the controller
   def initialize(req, res, params = {})
     @req = req
@@ -16,6 +22,12 @@ class ControllerBase
     @params = req.params.merge(params)
     @session = Session.new(req)
     @flash = Flash.new(req)
+
+    @auth_token = SecureRandom::urlsafe_base64
+    @res.set_cookie(
+      'authenticity_token',
+      path: "/", value: @auth_token
+    )
   end
 
   # Helper method to alias @already_built_response
@@ -43,7 +55,7 @@ class ControllerBase
   # pass the rendered html to render_content
   def render(template_name)
     template_path = "views/#{self.class.to_s.underscore}"
-    erb = ERB.new(File.read("#{template_path}/#{template_name.to_s}.html.erb"))
+    erb = ERB.new(File.read("#{template_path}/#{template_name}.html.erb"))
     render_content(erb.result(binding), "text/html")
   end
 
@@ -58,8 +70,24 @@ class ControllerBase
 
   # use this with the router to call action_name (:index, :show, :create...)
   def invoke_action(name)
+    check_authenticity_token if @req.request_method != 'GET'
     send(name)
     render(name) unless already_built_response?
+  end
+
+  def form_authenticity_token
+    @auth_token
+  end
+
+  def protect_from_forgery?
+    @@protect_from_forgery
+  end
+
+  def check_authenticity_token
+    if !@params['authenticity_token'] ||
+        @params['authenticity_token'] != @req.cookies['authenticity_token']
+      raise "Invalid authenticity token"
+    end
   end
 
   private

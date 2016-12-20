@@ -2,31 +2,44 @@ require 'sqlite3'
 
 PRINT_QUERIES = ENV['PRINT_QUERIES'] == 'true'
 # https://tomafro.net/2010/01/tip-relative-paths-with-file-expand-path
-ROOT_FOLDER = File.join(File.dirname(__FILE__), '..')
-CATS_SQL_FILE = File.join(ROOT_FOLDER, 'cats.sql')
-CATS_DB_FILE = File.join(ROOT_FOLDER, 'cats.db')
+DB_FOLDER = File.join(File.dirname(__FILE__), '../../db/')
 
 class DBConnection
-  def self.open(db_file_name)
-    @db = SQLite3::Database.new(db_file_name)
+
+  def self.db_file_exists?
+    @@db_file_name && File.file?(DB_FOLDER + @@db_file_name)
+  end
+
+  def self.set_db_file(db_file_name)
+    @@db_file_name = db_file_name
+  end
+
+  def self.open
+    @db = SQLite3::Database.new(DB_FOLDER + @@db_file_name)
     @db.results_as_hash = true
     @db.type_translation = true
 
     @db
   end
 
-  def self.reset
-    commands = [
-      "rm '#{CATS_DB_FILE}'",
-      "cat '#{CATS_SQL_FILE}' | sqlite3 '#{CATS_DB_FILE}'"
-    ]
+  def self.reset(db_sql_file)
 
-    commands.each { |command| `#{command}` }
-    DBConnection.open(CATS_DB_FILE)
+    if @@db_file_name
+      commands = [
+        "rm '#{DB_FOLDER}#{@@db_file_name}'",
+        "cat '#{DB_FOLDER}#{db_sql_file}' |" +
+        " sqlite3 '#{DB_FOLDER}#{@@db_file_name}'"
+      ]
+
+      commands.each { |command| `#{command}` }
+      DBConnection.open
+    else
+      raise "Cannot reset DB file, DB file not set"
+    end
   end
 
   def self.instance
-    reset if @db.nil?
+    open if @db.nil?
 
     @db
   end

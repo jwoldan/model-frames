@@ -1,4 +1,5 @@
 require 'erb'
+require_relative 'constants'
 
 class StaticAssets
 
@@ -11,9 +12,12 @@ class StaticAssets
   def call(env)
     @path_info = env["PATH_INFO"]
     match = @path_info.match(/^\/public\/(.*)$/)
+
     if match
       begin
-        static_file_content = File.read("public/#{match[1]}")
+        static_file_content = File.read(
+          File.join(PROJECT_ROOT, "public/#{match[1]}")
+        )
         extension = match[1].match(/\..*$/)
 
         case extension
@@ -29,9 +33,11 @@ class StaticAssets
           content_type = 'text/plain'
         end
 
-        ['200', { 'Content-type' => content_type }, static_file_content]
+        ['200', { 'Content-type' => content_type }, [static_file_content]]
       rescue Errno::ENOENT => e
-        erb = ERB.new(File.read("lib/templates/file_not_found.html.erb"))
+        erb = ERB.new(File.read(
+          File.join(TEMPLATE_FOLDER, "file_not_found.html.erb")
+        ))
         ['404', { 'Content-type' => 'text/html' }, [erb.result(binding)]]
       end
     else

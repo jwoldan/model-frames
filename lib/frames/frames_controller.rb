@@ -2,6 +2,7 @@ require 'active_support'
 require 'active_support/core_ext'
 require 'erb'
 
+require_relative 'constants'
 require_relative 'session'
 require_relative 'flash'
 
@@ -39,7 +40,7 @@ class FramesController
   end
 
   def render(template_name)
-    template_path = "views/#{self.class.to_s.underscore}"
+    template_path = File.join(VIEWS_BASE_FOLDER, self.class.to_s.underscore)
     erb = ERB.new(File.read("#{template_path}/#{template_name}.html.erb"))
     render_content(erb.result(binding), "text/html")
   end

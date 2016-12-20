@@ -1,4 +1,5 @@
 require 'erb'
+require_relative 'constants'
 
 class Exceptions
 
@@ -20,7 +21,7 @@ class Exceptions
     @error = e
     @source_lines = get_source_code_snippet(e)
 
-    erb = ERB.new(File.read("lib/templates/rescue.html.erb"))
+    erb = ERB.new(File.read(File.join(TEMPLATE_FOLDER, "rescue.html.erb")))
     ['500', { 'Content-type' => 'text/html' }, [erb.result(binding)]]
   end
 

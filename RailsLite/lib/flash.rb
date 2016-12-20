@@ -13,7 +13,7 @@ class Flash
     # since we can't do an internal conversion to
     # string in the now setter (because we don't have one)
     @flash_now[key.to_s] ||
-      @flash_now[key.to_sym] || 
+      @flash_now[key.to_sym] ||
       @flash[key.to_s]
   end
 
@@ -26,7 +26,7 @@ class Flash
   end
 
   def store_flash(res)
-    res.set_cookie('_rails_lite_app_flash', { path: "/", value: @flash.to_json })
+    res.set_cookie('_rails_lite_app_flash', value: @flash.to_json, path: '/')
   end
 
 end

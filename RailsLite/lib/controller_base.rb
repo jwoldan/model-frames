@@ -22,12 +22,6 @@ class ControllerBase
     @params = req.params.merge(params)
     @session = Session.new(req)
     @flash = Flash.new(req)
-
-    @auth_token = SecureRandom::urlsafe_base64
-    @res.set_cookie(
-      'authenticity_token',
-      path: "/", value: @auth_token
-    )
   end
 
   # Helper method to alias @already_built_response
@@ -76,6 +70,10 @@ class ControllerBase
   end
 
   def form_authenticity_token
+    @auth_token ||= SecureRandom::urlsafe_base64
+    res.set_cookie(
+      'authenticity_token', value: @auth_token, path: "/"
+    )
     @auth_token
   end
 
@@ -94,6 +92,7 @@ class ControllerBase
 
   def try_prep_response!
     raise "Error: already built response!" if already_built_response?
+
     session.store_session(res)
     flash.store_flash(res)
     @already_built_response = true

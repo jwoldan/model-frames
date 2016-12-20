@@ -2,7 +2,6 @@ require 'rack'
 require_relative '../lib/frames/router'
 require_relative '../lib/frames/exceptions'
 require_relative '../lib/frames/static_assets'
-require_relative 'db'
 require_relative 'controllers/gerbils_controller'
 
 router = Router.new

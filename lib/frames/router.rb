@@ -9,8 +9,8 @@ class Route
   end
 
   def matches?(req)
-    @http_method.to_s.upcase == req.request_method &&
-      @pattern =~ req.path
+    req_method = req.params['method'] || req.request_method
+    (@http_method.to_s.casecmp(req_method) == 0) && @pattern =~ req.path
   end
 
   def run(req, res)

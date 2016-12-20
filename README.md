@@ -96,6 +96,21 @@ router.draw do
 end
 ```
 
+## Configuring Database Access
+
+ModelObject uses a DBConnection class which works with SQLite.  In the example app, this is configured in `app/db.rb` as follows:
+
+```ruby
+require_relative '../lib/model/db_connection'
+
+DBConnection.set_db_file('gerbils.db')
+DBConnection.reset('gerbils.sql') unless DBConnection.db_file_exists?
+```
+
+You will need to create a .sql file to define the database structure (at minimum, though seeds can also be included).  `DBConnection` will look for the file name passed to `DBConnection.reset` in the `/db` folder.
+
+This configuration file should then be included in all your ModelObject subclasses.
+
 ## Additional Rack Middleware
 
 - `Exceptions` provides a detailed error message for any Ruby errors, which is useful for development enviroments.
@@ -107,7 +122,7 @@ end
 See [app/gerbilville.rb](app/gerbilville.rb) for an example application entry file.
 
 
-## Running the Example app
+## Running the Example App
 
 ### Prerequisites
 

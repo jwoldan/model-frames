@@ -54,7 +54,9 @@ class FramesController
   end
 
   def invoke_action(name)
-    check_authenticity_token if @req.request_method != 'GET'
+    if protect_from_forgery? && @req.request_method != 'GET'
+      check_authenticity_token
+    end
     send(name)
     render(name) unless already_built_response?
   end

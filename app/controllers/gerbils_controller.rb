@@ -3,6 +3,8 @@ require_relative '../models/gerbil'
 
 class GerbilsController < FramesController
 
+  protect_from_forgery
+
   def new
     render :new
   end

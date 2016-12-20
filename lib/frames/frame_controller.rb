@@ -5,7 +5,7 @@ require 'erb'
 require_relative 'session'
 require_relative 'flash'
 
-class ControllerBase
+class FrameController
   attr_reader :req, :res, :params
 
   @@protect_from_forgery = false

@@ -1,6 +1,6 @@
 require 'erb'
 
-class ShowExceptions
+class ExceptionsServer
 
   attr_reader :app
 
@@ -9,11 +9,9 @@ class ShowExceptions
   end
 
   def call(env)
-    begin
-      app.call(env)
-    rescue => e
-      render_exception(e)
-    end
+    app.call(env)    
+  rescue => e
+    render_exception(e)
   end
 
   private
@@ -23,7 +21,7 @@ class ShowExceptions
     @source_lines = get_source_code_snippet(e)
 
     erb = ERB.new(File.read("lib/templates/rescue.html.erb"))
-    ['500', {'Content-type' => 'text/html'}, [erb.result(binding)]]
+    ['500', { 'Content-type' => 'text/html' }, [erb.result(binding)]]
   end
 
   def get_source_code_snippet(e)
@@ -35,8 +33,8 @@ class ShowExceptions
 
     source_lines = []
     while (snippet_index < snippet_end) &&
-      (snippet_index < source_code.length)
-        source_lines << "#{snippet_index}: #{source_code[snippet_index]}"
+        (snippet_index < source_code.length)
+      source_lines << "#{snippet_index}: #{source_code[snippet_index]}"
       snippet_index += 1
     end
     source_lines

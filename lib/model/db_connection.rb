@@ -45,8 +45,6 @@ class DBConnection
     instance.last_insert_row_id
   end
 
-  private
-
   def self.print_query(query, *interpolation_args)
     return unless PRINT_QUERIES
 

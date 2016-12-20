@@ -1,4 +1,4 @@
-class Static
+class StaticAssetsServer
 
   attr_reader :app
 

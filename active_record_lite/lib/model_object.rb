@@ -1,7 +1,8 @@
 require_relative 'db_connection'
 require 'active_support/inflector'
 
-class SQLObject
+class ModelObject
+
   def self.columns
     if @columns.nil?
       result = DBConnection.execute2(<<-SQL)
@@ -9,23 +10,29 @@ class SQLObject
           *
         FROM
           #{table_name}
+        LIMIT
+          1
       SQL
       @columns = result[0].map(&:to_sym)
     end
     @columns
   end
 
+  # ModelObject#finalize! creates an attribute reader and writer for each column
+  # self.finalize! should be called at the end of the the subclass definition.
   def self.finalize!
     columns.each do |column|
       define_method(column) do
         attributes[column]
       end
-      define_method("#{column.to_s}=") do |val|
+      define_method("#{column}=") do |val|
         attributes[column] = val
       end
     end
   end
 
+  # Used to override the default table name.
+  # Should only be called in the subclass definition, and only once!
   def self.table_name=(table_name)
     @table_name = table_name
   end
@@ -81,6 +88,12 @@ class SQLObject
     self.class.columns.map { |column| self.send(column) }
   end
 
+  def save
+    self.id.nil? ? insert : update
+  end
+
+  private
+
   def insert
     columns = self.class.columns
     column_names = columns.join(", ")
@@ -108,7 +121,4 @@ class SQLObject
     SQL
   end
 
-  def save
-    self.id.nil? ? insert : update
-  end
 end

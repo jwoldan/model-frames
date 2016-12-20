@@ -1,0 +1,22 @@
+<h1>Create a Gerbil</h1>
+<img src='/public/gerbil.jpg' />
+
+<form action="/gerbils" method="post">
+  <input
+    type="hidden"
+    name="authenticity_token"
+    value="<%= form_authenticity_token %>" />
+  <label>
+    Name
+    <input type="text" name="gerbil[name]" />
+  </label><br>
+  <label>
+    Color
+    <input type="text" name="gerbil[color]" />
+  </label><br>
+  <label>
+    Noise
+    <input type="text" name="gerbil[sound]" />
+  </label><br>
+  <input type="submit" value="Create Gerbil" />
+</form>

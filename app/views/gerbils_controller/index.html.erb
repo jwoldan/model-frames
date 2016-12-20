@@ -1,0 +1,28 @@
+<h1>All the Gerbils</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Color</th>
+    <th>Sound</th>
+    <th></th>
+  </tr>
+  <% @gerbils.each do |gerbil| %>
+    <tr>
+      <th><a href="/gerbils/<%= gerbil.id %>"><%= gerbil.name %></a></th>
+      <th><%= gerbil.color %></th>
+      <th><%= gerbil.sound %></th>
+      <th>
+        <form class="" action="/gerbils/<%= gerbil.id %>" method="post">
+          <input type="hidden"
+            name="authenticity_token"
+            value="<%= form_authenticity_token %>" />
+          <input type="hidden" name="method" value="DELETE" />
+          <input type="submit" value="Delete" />
+        </form>
+      </th>
+    </tr>
+  <% end %>
+</table>
+
+<a href="/gerbils/new">Add a Gerbil</a>

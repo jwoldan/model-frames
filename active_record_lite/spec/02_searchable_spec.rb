@@ -1,15 +1,15 @@
-require '02_searchable'
+require 'model_object'
 
 describe 'Searchable' do
   before(:each) { DBConnection.reset }
   after(:each) { DBConnection.reset }
 
   before(:all) do
-    class Cat < SQLObject
+    class Cat < ModelObject
       finalize!
     end
 
-    class Human < SQLObject
+    class Human < ModelObject
       self.table_name = 'humans'
 
       finalize!

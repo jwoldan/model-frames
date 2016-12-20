@@ -1,7 +1,10 @@
-require_relative 'db_connection'
 require 'active_support/inflector'
 
+require_relative 'db_connection'
+require_relative 'searchable'
+
 class ModelObject
+  extend Searchable
 
   def self.columns
     if @columns.nil?

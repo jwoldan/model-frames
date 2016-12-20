@@ -1,74 +1,7 @@
-require_relative 'db_connection'
-require_relative '01_sql_object'
-
-module Searchable
-  def where(params)
-    Relation.new(self).where(params)
-  end
-
-  protected
-
-  def where_exec(criteria)
-    where_values = []
-    where_string = criteria[:where].map do |cond|
-      if cond.is_a? String
-        cond
-      else
-        where_values << cond[1]
-        "#{cond[0]} = ?"
-      end
-    end.join(" AND ")
-
-    # helper methods to create portions of the query
-    # note that these use string interpolation so they
-    # are somewhat unsafe
-    select_string = create_select_string(criteria[:select])
-    limit_string = create_limit_string(criteria[:limit])
-    order_string = create_order_string(criteria[:order])
-
-    sql_query = <<-SQL
-      SELECT
-        #{select_string}
-      FROM
-        #{self.table_name}
-      WHERE
-        #{where_string}
-      #{order_string}
-      #{limit_string}
-    SQL
-    results = DBConnection.execute(sql_query, where_values)
-    self.parse_all(results)
-  end
-
-  def create_select_string(select_string)
-    if select_string.nil?
-      "#{self.table_name}.*"
-    else
-      select_string
-    end
-  end
-
-  def create_limit_string(limit)
-    if limit.nil? || !(limit.is_a? Integer)
-      ""
-    else
-      "LIMIT #{limit}"
-    end
-  end
-
-  def create_order_string(order)
-    if order.nil? || order.length == 0
-      ""
-    else
-      "ORDER BY #{order}"
-    end
-  end
-
-end
-
 # Lazy loading and caching of query parts based on
 # http://jeffkreeftmeijer.com/2011/method-chaining-and-lazy-evaluation-in-ruby/
-class Relation
+
+class ModelRelation
   include Enumerable
 
   def initialize(klass)
@@ -136,7 +69,7 @@ class Relation
   end
 
   def first
-    # not sure first and last work quite right
+    # TODO: not sure first and last work quite right
     unless @cached_exec
       limit(1)
       order("id ASC")
@@ -145,7 +78,7 @@ class Relation
   end
 
   def last
-    unless @cached_exec
+    if !@cached_exec
       limit(1)
       order("id DESC")
     else
@@ -158,17 +91,14 @@ class Relation
   end
 
   private
+
   # this method caches query results by default.
   def exec_query(reload = false)
-    unless @cached_exec.nil? || reload
+    if !(@cached_exec.nil? || reload)
       @cached_exec
     else
       @cached_exec = @klass.send(:where_exec, criteria)
     end
   end
 
-end
-
-class SQLObject
-  extend Searchable
 end

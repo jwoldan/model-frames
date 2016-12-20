@@ -97,6 +97,17 @@ class ModelObject
     self.id.nil? ? insert : update
   end
 
+  def destroy
+    if self.id
+      DBConnection.execute(<<-SQL, self.id)
+        DELETE FROM
+          #{self.class.table_name}
+        WHERE
+          id = ?
+      SQL
+    end
+  end
+
   private
 
   def insert

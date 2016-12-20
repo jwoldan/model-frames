@@ -27,7 +27,6 @@ class ShowExceptions
   end
 
   def get_source_code_snippet(e)
-    # get the first line of the backtrace and split it on colons
     first_backtrace_line = e.backtrace[0].split(':')
     source_code = File.readlines(first_backtrace_line[0])
     snippet_index = first_backtrace_line[1].to_i - 5

@@ -133,3 +133,8 @@ Up-to-date versions of [Ruby](https://www.ruby-lang.org/en/) and [Bundler](http:
 3. `bundle install`
 4. `ruby app/gerbilville.rb`
 4. Visit `http://localhost:3000`
+
+## Ideas for Future Enhancement
+
+- Create a CLI using [Thor](http://whatisthor.com/).
+- Package ModelFrames as a [gem](https://rubygems.org/).

@@ -9,7 +9,7 @@ ModelFrames is a basic ORM (Object Relational Management) / MVC (Model View Cont
 Custom classes that extend `ModelObject` inherit a number of ORM features:
 
 - parameters can be passed in a params hash (e.g. `gerbil = Gerbil.new(name: 'Buki', color: 'striped', sound: 'squeak')`).  The keys must correspond to columns in the corresponding database table.  By default, the table name is created by applying the [`ActiveSupport::Inflector::tableize`](http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-tableize) method to the class name.
-- the `ModelObject#save` method will intelligently insert or update the related row in the database based on whether or not the `id` primary key is define.  
+- the `ModelObject#save` method will intelligently insert or update the related row in the database based on whether or not the `id` primary key is defined.  
 - the `ModelObject#destroy` method will delete the related row from the database.
 - By calling `self.finalize!` at the end of your custom class definition, attribute accessors are created which correspond to the columns in the associated database table.
 

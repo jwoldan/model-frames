@@ -10,7 +10,7 @@ class ModelObject
 
   def self.columns
     if @columns.nil?
-      result = DBConnection.execute2(<<-SQL)
+      result = DBConnection.execute_with_column_names(<<-SQL)
         SELECT
           *
         FROM

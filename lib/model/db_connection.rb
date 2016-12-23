@@ -49,7 +49,10 @@ class DBConnection
     instance.execute(*args)
   end
 
-  def self.execute2(*args)
+
+  # This alternate execute method returns the db column names
+  # as the first row of the results.
+  def self.execute_with_column_names(*args)
     print_query(*args)
     instance.execute2(*args)
   end
